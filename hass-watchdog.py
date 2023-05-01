@@ -29,6 +29,7 @@ def ping_hass():
         r = requests.post(url)
         print(f"[bold green]Alive![/bold green] {r.text}")
         hass_alive = True
+        failed_responses = 0
 
     except Exception as exc:
         failed_responses += 1
