@@ -1,0 +1,6 @@
+MAX_FAILED_RESPONSES = 6
+SLEEP_TIME = 30
+RESET_SLEEP_TIME = 600
+
+HASS_URL = "https://my.home-assistant.io/"
+WATCHDOG_WEBHOOK = "webhook_name"

@@ -1,0 +1,2 @@
+pyshelly
+rich
