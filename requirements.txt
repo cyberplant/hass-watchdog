@@ -1,2 +1,3 @@
 pyshelly
 rich
+requests
