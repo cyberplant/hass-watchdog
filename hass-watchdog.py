@@ -16,13 +16,25 @@ failed_responses = 0
 
 relay_device = None
 
+stats = {
+    "last_reboot": None,
+    "reboots": 0,
+    "last_failure": None,
+    "accumulative_failures": 0,
+    "start_time": datetime.datetime.now(),
+    "ping_count": 0
+}
+
 def ping_hass():
     global failed_responses
     global hass_alive
 
     try:
+        stats["ping_count"] += 1
         now = datetime.datetime.now()
-        print(f"----- {now} -----")
+        print(f"----- {now} (uptime: {now - stats['start_time']}) -----")
+        if stats["ping_count"] % 5 == 0:
+            print(stats)
         print("Pinging hass.. ", end="" )
         url = f"{HASS_URL}/api/webhook/{WATCHDOG_WEBHOOK}"
         # print(f"URL: {url}")
@@ -33,6 +45,9 @@ def ping_hass():
 
     except Exception as exc:
         failed_responses += 1
+        stats["accumulative_failures"] += 1
+        stats["last_failure"] += now
+
         print(f"[bold red]Down![/bold red] Exception: [red]{exc}[/red] Failed: {failed_responses}")
         if hass_alive and failed_responses > MAX_FAILED_RESPONSES:
             hass_alive = False
@@ -75,6 +90,9 @@ def reset_hass():
     if not turn_on_shelly():
         return
 
+    stats["reboots"] += 1
+    stats["last_reboot"] += datetime.datetime.now()
+
     print(f"Waiting for {RESET_SLEEP_TIME} seconds to check health again.")
     time.sleep(RESET_SLEEP_TIME)
 
@@ -103,16 +121,14 @@ def device_added(dev, code):
     global relay_device
 
     if not dev.id.startswith(SHELLY_RELAY_ID):
-        print(f"Device {dev.id} ignored.", end="\r")
+        print(f"Device {dev.id} ignored (wrong id).")
         return
 
     if not isinstance(dev, Relay):
-        # print("Device type is not Relay")
+        print(f"Device {dev.id} ignored (not a Relay).")
         return
 
-    print ("[bold green]Device found!![/bold green]: ", end="")
-
-    print(f"{dev.id} | {dev.friendly_name()} | {dev.state}")
+    print(f"[bold green]Device found!![/bold green]: {dev.id} | {dev.friendly_name()}")
 
     relay_device = dev
 
