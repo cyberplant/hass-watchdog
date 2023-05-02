@@ -37,8 +37,8 @@ def ping_hass():
             print(stats)
         print("Pinging hass.. ", end="" )
         url = f"{HASS_URL}/api/webhook/{WATCHDOG_WEBHOOK}"
-        # print(f"URL: {url}")
         r = requests.post(url)
+        r.raise_for_status()
         print(f"[bold green]Alive![/bold green] {r.text}")
         hass_alive = True
         failed_responses = 0
