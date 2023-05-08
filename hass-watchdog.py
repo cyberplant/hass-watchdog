@@ -11,7 +11,7 @@ from pyShelly import pyShelly
 from config import (MAX_FAILED_RESPONSES, SLEEP_TIME, RESET_SLEEP_TIME, HASS_URL,
                     WATCHDOG_WEBHOOK, SHELLY_RELAY_ID)
 
-hass_alive = False
+hass_alive = True
 failed_responses = 0
 
 relay_device = None
