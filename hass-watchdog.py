@@ -46,7 +46,7 @@ def ping_hass():
     except Exception as exc:
         failed_responses += 1
         stats["accumulative_failures"] += 1
-        stats["last_failure"] += now
+        stats["last_failure"] = now
 
         print(f"[bold red]Down![/bold red] Exception: [red]{exc}[/red] Failed: {failed_responses}")
         if hass_alive and failed_responses > MAX_FAILED_RESPONSES:
@@ -91,7 +91,7 @@ def reset_hass():
         return
 
     stats["reboots"] += 1
-    stats["last_reboot"] += datetime.datetime.now()
+    stats["last_reboot"] = datetime.datetime.now()
 
     print(f"Waiting for {RESET_SLEEP_TIME} seconds to check health again.")
     time.sleep(RESET_SLEEP_TIME)
