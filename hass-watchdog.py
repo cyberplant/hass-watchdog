@@ -36,9 +36,17 @@ def ping_hass():
         if stats["ping_count"] % 5 == 0:
             print(stats)
         print("Pinging hass.. ", end="" )
+
         url = f"{HASS_URL}/api/webhook/{WATCHDOG_WEBHOOK}"
         r = requests.post(url)
         r.raise_for_status()
+
+        # Add a secondary check, cause first check sometimes work even when
+        # HASS is failing
+        url = f"{HASS_URL}/hacsfiles/iconset.js"
+        r = requests.get(url)
+        r.raise_for_status()
+
         print(f"[bold green]Alive![/bold green] {r.text}")
         hass_alive = True
         failed_responses = 0
