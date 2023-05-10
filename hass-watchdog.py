@@ -47,7 +47,7 @@ def ping_hass():
         r = requests.get(url)
         r.raise_for_status()
 
-        print(f"[bold green]Alive![/bold green] {r.text}")
+        print(f"[bold green]Alive![/bold green]")
         hass_alive = True
         failed_responses = 0
 
